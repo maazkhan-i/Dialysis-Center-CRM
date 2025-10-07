@@ -1,14 +1,13 @@
-const express = require('express');
-const app = express();
+import express from "express";
+import loginRoutes from "./routes/loginRoutes.js";
+// import authRoutes from "./routes/authRoutes.js";
 
-// middleware (to parse JSON)
+const app = express();
+// middleware:
 app.use(express.json());
 
-// simple route
-app.get('/', (req, res) => {
-  res.send('Hello from Node.js Backend!');
-});
+//can be replace api to dialysiscenter
+app.use("/api", loginRoutes);
+// app.use("/api/auth", authRoutes);
 
-// server listen
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(3000, () => console.log("Server running on port 3000"));
