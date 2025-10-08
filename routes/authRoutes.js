@@ -1,48 +1,61 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 const router = express.Router();
 
-// Temporary in-memory "users"
-const users = [];
+// 🧠 Load users from users.json
+const users = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
 
-// 🟢 Register
-router.post('/register', async (req, res) => {
+/* ================================
+   🟢 LOGIN (no bcrypt, plain text)
+================================ */
+router.post('/login', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
-    const existingUser = users.find(u => u.email === email);
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+    // Find user from users.json
+    const user = users.find(u => u.email === email);
+    if (!user) return res.status(400).json({ message: 'User not found' });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { name, email, password: hashedPassword };
-    users.push(newUser);
+    // 🔹 Compare plain text password
+    if (password !== user.password)
+      return res.status(400).json({ message: 'Invalid credentials' });
 
-    res.status(201).json({ message: 'User registered successfully', user: newUser });
+    // 🔹 Create JWT token with role
+    const token = jwt.sign(
+      { email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({
+      message: '✅ Login successful',
+      token,
+      user: { name: user.name, email: user.email, role: user.role }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// 🟢 Login
-router.post('/login', async (req, res) => {
+/* ================================
+   🟣 Example Admin-only Route
+================================ */
+router.get('/admin', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader)
+    return res.status(401).json({ message: 'No token provided' });
+
+  const token = authHeader.split(' ')[1];
   try {
-    const { email, password } = req.body;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.role !== 'admin')
+      return res.status(403).json({ message: 'Access denied: Admins only' });
 
-    const user = users.find(u => u.email === email);
-    if (!user) return res.status(400).json({ message: 'User not found' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    res.json({ message: 'Login successful', token });
+    res.json({ message: 'Welcome Admin!', user: decoded });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(401).json({ message: 'Invalid token' });
   }
 });
 
