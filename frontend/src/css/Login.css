@@ -1,0 +1,71 @@
+/* Container that centers the card vertically & horizontally */
+.login-page {
+  min-height: 100vh;            /* full viewport height */
+  background: linear-gradient(180deg, #f7fafc 0%, #eef2f7 100%);
+  padding: 2rem;
+}
+
+/* Card */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  border: none;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Brand block */
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4); /* blue -> teal */
+  box-shadow: 0 6px 18px rgba(11, 60, 120, 0.08);
+}
+
+/* Headings */
+.brand h4 {
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* Slightly bolder labels */
+.form-label.fw-medium {
+  font-weight: 600;
+  font-size: 0.95rem;
+  float: left;
+}
+
+/* Input focus style (Bootstrap already has focus but we add subtle) */
+.form-control:focus {
+  box-shadow: 0 0 0 0.12rem rgba(59,130,246,0.15);
+  border-color: #3b82f6;
+}
+
+/* Subtle hr */
+.login-card hr {
+  margin: 1rem 0;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Links under the form */
+.login-card a {
+  text-decoration: none;
+}
+.login-card a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .login-card {
+    margin: 0 12px;
+  }
+}
