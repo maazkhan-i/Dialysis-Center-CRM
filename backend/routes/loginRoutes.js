@@ -1,5 +1,5 @@
-// backend/routes/authRoutes.js
 const express = require('express');
+const router = express.Router();
 const {
   login,
   adminAccess,
@@ -8,18 +8,12 @@ const {
   billerAccess,
   referralAgentAccess
 } = require('../controllers/loginController');
-const { verifyToken, authorizeRole } = require('../utils/authMiddleware');
+const { verifyToken, authorizeRole } = require('../utils/helpers');
 
-const router = express.Router();
-
-/* ================================
-   LOGIN ROUTE
-================================ */
+// 🟢 Login route
 router.post('/login', login);
 
-/* ================================
-    ROLE-SPECIFIC ROUTES
-================================ */
+// 🎯 Role-based routes
 router.get('/admin', verifyToken, authorizeRole('Admin'), adminAccess);
 router.get('/case-manager', verifyToken, authorizeRole('Case Manager'), caseManagerAccess);
 router.get('/nurse', verifyToken, authorizeRole('Nurse'), nurseAccess);
