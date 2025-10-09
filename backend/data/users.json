@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Admin User",
+    "email": "admin@test.com",
+    "password": "123456",
+    "role": "Admin"
+  },
+  {
+    "name": "Case Manager User",
+    "email": "case@test.com",
+    "password": "123456",
+    "role": "Case Manager"
+  },
+  {
+    "name": "Nurse User",
+    "email": "nurse@test.com",
+    "password": "123456",
+    "role": "Nurse"
+  },
+  {
+    "name": "Biller User",
+    "email": "biller@test.com",
+    "password": "123456",
+    "role": "Biller"
+  },
+  {
+    "name": "Referral Agent User",
+    "email": "ref@test.com",
+    "password": "123456",
+    "role": "Referral Agent"
+  }
+]
