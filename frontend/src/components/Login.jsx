@@ -1,22 +1,47 @@
 import { useState } from "react";
-import "../css/Login.css"; // from components -> go up to src -> css
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../css/Login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("in handle submit function")
     setLoading(true);
+    setError("");
 
-    // Simulate API call (replace with real API)
-    setTimeout(() => {
-      console.log("Email:", email);
-      console.log("Password:", password);
+    try {
+      console.log("form submitting")
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
+      console.log("Data fetch from api : ",res.data)
+
+      // ✅ Save token & role in localStorage
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
+
+      // ✅ Redirect based on backend (if admin)
+      if (res.data.user.role.toLowerCase() === "admin") {
+        navigate("/dashboard/admin");
+        console.log("logged in")
+      } else {
+        // navigate("/"); // you can change this for other roles
+        console.log("not logged in")
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Login failed. Please try again.");
+    } finally {
       setLoading(false);
-      // On success: navigate or show success message
-    }, 700);
+    }
   };
 
   return (
@@ -29,7 +54,9 @@ export default function Login() {
             <small className="text-muted">Welcome back — please sign in</small>
           </div>
 
-          <form onSubmit={handleSubmit} noValidate>
+          {error && <div className="alert alert-danger">{error}</div>}
+
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label fw-medium">Email address</label>
               <input

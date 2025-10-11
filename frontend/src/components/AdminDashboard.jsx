@@ -1,8 +1,25 @@
-import { useState } from "react";
-import "../css/Dashboard.css"; // CSS file from src/css folder
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../css/Dashboard.css";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const navigate = useNavigate();
+
+  // ✅ Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/");
+  };
+
+  // ✅ Optional: Redirect if not admin
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role !== "Admin") {
+      navigate("/");
+    }
+  }, [navigate]);
 
   return (
     <div className="dashboard-container d-flex">
@@ -35,6 +52,12 @@ export default function AdminDashboard() {
             </button>
           </li>
         </ul>
+        <button
+          className="btn btn-outline-light mt-4 w-100"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
 
       {/* Main Content */}
