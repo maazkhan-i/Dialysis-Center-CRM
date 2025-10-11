@@ -1,0 +1,29 @@
+.dashboard-container {
+  height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+}
+
+.sidebar .nav-link {
+  border: none;
+  background: none;
+  text-align: left;
+  padding: 10px 15px;
+  width: 100%;
+}
+
+.sidebar .nav-link.active {
+  background-color: #0d6efd;
+  border-radius: 5px;
+}
+
+.main-content {
+  background-color: #f8f9fa;
+}
+
+.dashboard-header h2 {
+  font-weight: 600;
+}
